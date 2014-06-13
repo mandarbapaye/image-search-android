@@ -1,5 +1,7 @@
 package com.mb.image_search;
 
+import static com.mb.image_search.Constants.IMAGE_URL_PARAM;
+
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -7,9 +9,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,7 +40,22 @@ public class SearchMainActivity extends Activity {
 		imageResultsAdapter = new ImageResultsArrayAdapter(this, imageResultsList);
 		gvImages.setAdapter(imageResultsAdapter);
 		
+		setupHandlers();
+		
 		displayImages("android");
+	}
+	
+	private void setupHandlers() {
+		gvImages.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ImageResult imageResult = imageResultsList.get(position);
+				Intent intentFullImage = new Intent(getApplicationContext(), FullImageActivity.class);
+				intentFullImage.putExtra(IMAGE_URL_PARAM, imageResult.getFullUrl());
+				startActivity(intentFullImage);
+			}
+		});
 	}
 
 	private void setupViews() {
@@ -53,7 +74,6 @@ public class SearchMainActivity extends Activity {
 					try {
 						JSONArray imageResultsArray = response.getJSONObject("responseData").getJSONArray("results");
 						imageResultsList.clear();
-//						imageResultsList.addAll(ImageResult.fromJSONArray(imageResultsArray));
 						imageResultsAdapter.addAll(ImageResult.fromJSONArray(imageResultsArray));
 						Log.d("mandar", imageResultsList.toString());
 					} catch (JSONException e) {

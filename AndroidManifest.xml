@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -23,6 +23,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mb.image_search.FullImageActivity"
+            android:label="@string/title_activity_full_image" >
         </activity>
     </application>
 
