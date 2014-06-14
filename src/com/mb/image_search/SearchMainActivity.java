@@ -41,8 +41,6 @@ public class SearchMainActivity extends Activity {
 		gvImages.setAdapter(imageResultsAdapter);
 		
 		setupHandlers();
-		
-		displayImages("android");
 	}
 	
 	private void setupHandlers() {
@@ -56,16 +54,23 @@ public class SearchMainActivity extends Activity {
 				startActivity(intentFullImage);
 			}
 		});
+		
+		gvImages.setOnScrollListener(new EndlessScrollListener() {
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+				loadImages(page);
+			}
+		});
 	}
 
 	private void setupViews() {
 		gvImages = (GridView) findViewById(R.id.gvImages);
 	}
 
-	private void displayImages(String imageSearchStr) {
+	private void loadImages(int page) {	
 		// TODO Auto-generated method stub
 		
-		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=0&v=1.0&q=" + Uri.encode(imageSearchStr);
+		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + page + "&v=1.0&q=" + Uri.encode("android");
 		AsyncHttpClient httpClient = new AsyncHttpClient();
 		httpClient.get(searchUrl, 
 			new JsonHttpResponseHandler() {
@@ -73,9 +78,9 @@ public class SearchMainActivity extends Activity {
 				public void onSuccess(JSONObject response) {
 					try {
 						JSONArray imageResultsArray = response.getJSONObject("responseData").getJSONArray("results");
-						imageResultsList.clear();
+						//imageResultsList.clear();
 						imageResultsAdapter.addAll(ImageResult.fromJSONArray(imageResultsArray));
-						Log.d("mandar", imageResultsList.toString());
+						Log.d("mydebug", imageResultsList.toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
