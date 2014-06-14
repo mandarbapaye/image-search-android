@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -69,7 +70,7 @@ public class SearchMainActivity extends Activity {
 
 	private void loadImages(int page) {	
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(getApplicationContext(), "Loading " + page, Toast.LENGTH_SHORT).show();
 		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + page + "&v=1.0&q=" + Uri.encode("android");
 		AsyncHttpClient httpClient = new AsyncHttpClient();
 		httpClient.get(searchUrl, 
