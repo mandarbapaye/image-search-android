@@ -48,7 +48,6 @@ public abstract class EndlessScrollListener implements OnScrollListener {
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
         if (loading && (totalItemCount > previousTotalItemCount)) {
-        	Log.d("mandar", "DONE loading " + (currentPage + 1));
             loading = false;
             previousTotalItemCount = totalItemCount;
             currentPage++;
@@ -58,10 +57,9 @@ public abstract class EndlessScrollListener implements OnScrollListener {
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-        	Log.d("mandar", "loading " + (currentPage + 1));
         	if (currentPage < 8) {
-                onLoadMore(currentPage + 1, totalItemCount);
-                loading = true;
+        		onLoadMore(currentPage + 1, totalItemCount);
+        		loading = true;
         	}
         }
     }
