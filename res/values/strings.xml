@@ -10,5 +10,6 @@
     <string name="img_size_label">Image Size</string>
     <string name="colorFilterLabel">Color Filter</string>
     <string name="typeLabel">Image Type</string>
+    <string name="filter_label">Site Filter</string>
 
 </resources>

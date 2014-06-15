@@ -52,7 +52,7 @@
     </LinearLayout>
     
     <LinearLayout
-        android:id="@+id/TypeLayout"
+        android:id="@+id/typeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -61,7 +61,7 @@
         android:padding="@dimen/paddingSize" >
 
         <TextView
-            android:id="@+id/tvType"
+            android:id="@+id/tvFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/typeLabel"
@@ -75,6 +75,42 @@
 
     </LinearLayout>
     
-    
+    <LinearLayout
+        android:id="@+id/filterLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/typeLayout"
+        android:padding="@dimen/paddingSize" >
+
+        <TextView
+            android:id="@+id/tvFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <EditText
+            android:id="@+id/etFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/filterLayout"
+        android:padding="@dimen/paddingSize"
+        android:text="Save" />
 
 </RelativeLayout>

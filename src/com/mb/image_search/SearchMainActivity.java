@@ -1,6 +1,6 @@
 package com.mb.image_search;
 
-import static com.mb.image_search.Constants.IMAGE_URL_PARAM;
+import com.mb.image_search.Constants;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,12 +27,18 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.mb.image_search.model.ImageResult;
+import com.mb.image_search.model.SearchPreferences;
+
 
 //public class SearchMainActivity extends Activity {
 
-public class SearchMainActivity extends SherlockFragmentActivity {
+public class SearchMainActivity extends SherlockFragmentActivity implements SearchPrefsPickerFragment.OnPreferencesSetListener {
 	
 	private static final String GOOGLE_IMG_SEARCH_API_URL = "https://ajax.googleapis.com/ajax/services/search/images";
+	private static final String COLOR_PREF_KEY = "color";
+	private static final String TYPE_PREF_KEY = "type";
+	private static final String SIZE_PREF_KEY = "size";
+	private static final String SITE_PREF_KEY = "site";
 	
 	GridView gvImages;
 	
@@ -39,6 +46,7 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 	private ImageResultsArrayAdapter imageResultsAdapter;
 	
 	private String searchQuery;
+	private SearchPreferences searchPrefs = new SearchPreferences();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +58,8 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 		gvImages.setAdapter(imageResultsAdapter);
 		
 		setupHandlers();
+		loadPreferences();
 	}
-	
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
@@ -79,6 +87,9 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 	
 	public void onSettingsClicked(MenuItem menuItem) {
 		SearchPrefsPickerFragment prefsFragment = SearchPrefsPickerFragment.newInstance();
+		Bundle args = new Bundle();
+		args.putSerializable(Constants.PREFS_ARG_KEY, searchPrefs);
+		prefsFragment.setArguments(args);
 		prefsFragment.show(this.getSupportFragmentManager(), "test");
 	}
 	
@@ -89,7 +100,7 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ImageResult imageResult = imageResultsList.get(position);
 				Intent intentFullImage = new Intent(getApplicationContext(), FullImageActivity.class);
-				intentFullImage.putExtra(IMAGE_URL_PARAM, imageResult.getFullUrl());
+				intentFullImage.putExtra(Constants.IMAGE_URL_PARAM, imageResult.getFullUrl());
 				startActivity(intentFullImage);
 			}
 		});
@@ -107,13 +118,27 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 	}
 
 	private void loadImages(int page) {	
-		// TODO Auto-generated method stub
 //		Toast.makeText(getApplicationContext(), "Loading " + page, Toast.LENGTH_SHORT).show();
 		if (searchQuery == null || searchQuery.trim().isEmpty()) {
 			return;
 		}
 		
 		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + page + "&v=1.0&q=" + Uri.encode(searchQuery);
+		if (searchPrefs.getColorFilter() != null) {
+			searchUrl += "&imgcolor=" + searchPrefs.getColorFilter().toString();
+		}
+		if (searchPrefs.getSizeFilter() != null) {
+			searchUrl += "&imgsz=" + searchPrefs.getSizeFilter().toString();
+		}
+		if (searchPrefs.getTypeFilter() != null) {
+			searchUrl += "&imgtype=" + searchPrefs.getTypeFilter().toString();
+		}
+		if (searchPrefs.getSitefilter() != null) {
+			searchUrl += "&as_sitesearch=" + searchPrefs.getSitefilter();
+		}
+
+		Log.d("img-search-debug", "SEARCH_URL : " + searchUrl);
+		
 		AsyncHttpClient httpClient = new AsyncHttpClient();
 		httpClient.get(searchUrl, 
 			new JsonHttpResponseHandler() {
@@ -131,5 +156,47 @@ public class SearchMainActivity extends SherlockFragmentActivity {
 				}
 			});
 		
+	}
+
+
+	@Override
+	public void onPrefsSet(SearchPreferences preferences) {
+		if (preferences != null) {
+			searchPrefs.setTypeFilter(preferences.getTypeFilter());
+			searchPrefs.setSizeFilter(preferences.getSizeFilter());
+			searchPrefs.setColorFilter(preferences.getColorFilter());
+			searchPrefs.setSitefilter(preferences.getSitefilter());
+		}
+
+		savePreferences();
+	}
+
+	private void loadPreferences() {
+		SharedPreferences sharedPref = getSharedPreferences(Constants.SHARED_PREF_FILE_NAME, MODE_PRIVATE);
+		String color = sharedPref.getString(COLOR_PREF_KEY, null);
+		String size = sharedPref.getString(SIZE_PREF_KEY, null);
+		String type = sharedPref.getString(TYPE_PREF_KEY, null);
+		String site = sharedPref.getString(SITE_PREF_KEY, null);
+		
+		if (color != null) {
+			searchPrefs.setColorFilter(SearchPreferences.Color.valueOf(color));
+		}
+		if (size != null) {
+			searchPrefs.setSizeFilter(SearchPreferences.Size.valueOf(size));
+		}
+		if (type != null) {
+			searchPrefs.setTypeFilter(SearchPreferences.Type.valueOf(type));
+		}
+		searchPrefs.setSitefilter(site);
+	}
+
+	private void savePreferences() {
+		SharedPreferences sharedPref = getSharedPreferences(Constants.SHARED_PREF_FILE_NAME, MODE_PRIVATE);
+		SharedPreferences.Editor prefEditor = sharedPref.edit();
+		prefEditor.putString(SIZE_PREF_KEY, searchPrefs.getSizeFilter().toString());
+		prefEditor.putString(COLOR_PREF_KEY, searchPrefs.getColorFilter().toString());
+		prefEditor.putString(TYPE_PREF_KEY, searchPrefs.getTypeFilter().toString());
+		prefEditor.putString(SITE_PREF_KEY, searchPrefs.getSitefilter());
+		prefEditor.commit();
 	}
 }
