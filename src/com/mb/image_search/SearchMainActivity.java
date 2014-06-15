@@ -16,9 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -30,7 +29,8 @@ import com.mb.image_search.model.ImageResult;
 
 //public class SearchMainActivity extends Activity {
 
-public class SearchMainActivity extends SherlockActivity {
+public class SearchMainActivity extends SherlockFragmentActivity {
+	
 	private static final String GOOGLE_IMG_SEARCH_API_URL = "https://ajax.googleapis.com/ajax/services/search/images";
 	
 	GridView gvImages;
@@ -56,6 +56,7 @@ public class SearchMainActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.action_bar_menu, menu);
+		
 	    MenuItem searchItem = menu.findItem(R.id.action_search);
 	    SearchView searchView = (SearchView) searchItem.getActionView();
 	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -73,7 +74,12 @@ public class SearchMainActivity extends SherlockActivity {
 	       }
 	   });
 	    
-		return super.onCreateOptionsMenu(menu);
+	   return super.onCreateOptionsMenu(menu);
+	}
+	
+	public void onSettingsClicked(MenuItem menuItem) {
+		SearchPrefsPickerFragment prefsFragment = SearchPrefsPickerFragment.newInstance();
+		prefsFragment.show(this.getSupportFragmentManager(), "test");
 	}
 	
 	private void setupHandlers() {

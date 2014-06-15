@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_search"
-          android:title="Search"
+          android:title="@string/search_label"
           android:icon="@drawable/ic_search"
           android:showAsAction="ifRoom|collapseActionView"
           android:actionViewClass="com.actionbarsherlock.widget.SearchView" />
@@ -10,6 +10,7 @@
         android:id="@+id/miSettings"
         android:icon="@drawable/ic_settings"
         android:showAsAction="always"
-        android:title="@string/settings_label"/>
+        android:title="@string/settings_label"
+        android:onClick="onSettingsClicked"/>
 
 </menu>
