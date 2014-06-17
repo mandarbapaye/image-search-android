@@ -11,5 +11,6 @@
     <string name="colorFilterLabel">Color Filter</string>
     <string name="typeLabel">Image Type</string>
     <string name="filter_label">Site Filter</string>
+    <string name="share_label">Share</string>
 
 </resources>
