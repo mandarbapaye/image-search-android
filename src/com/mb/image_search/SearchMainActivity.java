@@ -124,13 +124,16 @@ public class SearchMainActivity extends SherlockFragmentActivity implements Sear
 		}
 		
 		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + page + "&v=1.0&q=" + Uri.encode(searchQuery);
-		if (searchPrefs.getColorFilter() != null) {
+		if (searchPrefs.getColorFilter() != null &&
+			!searchPrefs.getColorFilter().equals(SearchPreferences.Color.any)) {
 			searchUrl += "&imgcolor=" + searchPrefs.getColorFilter().toString();
 		}
-		if (searchPrefs.getSizeFilter() != null) {
+		if (searchPrefs.getSizeFilter() != null &&
+			!searchPrefs.getSizeFilter().equals(SearchPreferences.Size.any)) {
 			searchUrl += "&imgsz=" + searchPrefs.getSizeFilter().toString();
 		}
-		if (searchPrefs.getTypeFilter() != null) {
+		if (searchPrefs.getTypeFilter() != null &&
+			!searchPrefs.getTypeFilter().equals(SearchPreferences.Type.any)) {
 			searchUrl += "&imgtype=" + searchPrefs.getTypeFilter().toString();
 		}
 		if (searchPrefs.getSitefilter() != null) {

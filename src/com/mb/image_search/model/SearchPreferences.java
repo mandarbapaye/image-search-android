@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class SearchPreferences implements Serializable {
 	
-	public enum Size {small, medium, large, xlarge};
-	public enum Type {face, photo, clipart, lineart};
-	public enum Color {black, blue, brown, gray, green, orange, purple, white, yellow}
+	public enum Size {any, small, medium, large, xlarge};
+	public enum Type {any, face, photo, clipart, lineart};
+	public enum Color {any, black, blue, brown, gray, green, orange, purple, white, yellow}
 	
 	Size sizeFilter;
 	Type typeFilter;
