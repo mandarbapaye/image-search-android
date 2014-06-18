@@ -123,7 +123,8 @@ public class SearchMainActivity extends SherlockFragmentActivity implements Sear
 			return;
 		}
 		
-		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + page + "&v=1.0&q=" + Uri.encode(searchQuery);
+		int offset = page * 8;
+		String searchUrl = GOOGLE_IMG_SEARCH_API_URL + "?rsz=8&start=" + offset + "&v=1.0&q=" + Uri.encode(searchQuery);
 		if (searchPrefs.getColorFilter() != null &&
 			!searchPrefs.getColorFilter().equals(SearchPreferences.Color.any)) {
 			searchUrl += "&imgcolor=" + searchPrefs.getColorFilter().toString();
